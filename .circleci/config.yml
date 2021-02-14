@@ -29,7 +29,6 @@ jobs:
           command: |
             hadolint -v
             hadolint --ignore DL3006 Dockerfile
-
   Dockerize:
     machine: true
     steps:
@@ -37,7 +36,7 @@ jobs:
       - run:
           name: docker logout
           command: |
-            docker logout
+           docker logout
       - run:
           name: Docker Login
           command: |
@@ -45,11 +44,11 @@ jobs:
       - run: 
           name: Build Image 
           command: |
-            docker build -t mohamedatef96/capstone .
+            docker build -t mohamedatef96/capstone-Devops .
       - run: 
           name: Push Image to DockerHub 
           command: |
-            docker push mohamedatef96/capstone
+            docker push mohamedatef96/capstone-Devops
     
   Kubectl_Apply:
     docker:
@@ -60,20 +59,21 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            ./update_kubeconfig.sh
+            sudo ./update_kubeconfig.sh
       - run:
           name: Start Blue Service 
           command: |
-            kubectl apply -f ./Blue.json        
+            cd blue
+            sudo ./run_kubernetes.sh       
       - run:
           name: Start Green Service 
           command: |       
-            kubectl apply -f ./Green.json
+            cd green
+            sudo ./run_kubernetes.sh
       - run:
           name: Redirect to Blue 
           command: |       
-            kubectl apply -f ./Blue-Service.json
-
+            sudo ./run_kubernetes.sh
   Apply_Green:
     docker:
     - image: amazon/aws-cli
@@ -83,13 +83,11 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            ./update_kubeconfig.sh
+            sudo ./update_kubeconfig.sh
       - run:
           name: Redirect to Green
           command: |
-            kubectl apply -f ./Green-Service.json
-
-
+            sudo ./run_kubernetes.sh
 workflows:
   default:
     jobs:
@@ -103,4 +101,3 @@ workflows:
           requires: [Kubectl_Apply]
       - Apply_Green:
           requires: [Approve_Green]
-            

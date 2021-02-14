@@ -1,2 +1,0 @@
-# Udacity-Capstone-Devops
- 
