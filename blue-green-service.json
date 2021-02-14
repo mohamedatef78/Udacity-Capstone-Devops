@@ -2,9 +2,9 @@
    "kind":"Service",
    "apiVersion":"v1",
    "metadata":{
-      "name":"bluegreenLoadBalancer",
+      "name":"bluegreenloadbalancer",
       "labels":{
-         "app":"bluegreenLoadBalancer"
+         "app":"bluegreenloadbalancer"
       }
    },
    "spec":{
