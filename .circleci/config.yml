@@ -44,11 +44,11 @@ jobs:
       - run: 
           name: Build Image 
           command: |
-            docker build -t mohamedatef96/devops-capstone .
+            docker build -t mohamedatef96/devops-capstone-udacity .
       - run: 
           name: Push Image to DockerHub 
           command: |
-            docker push mohamedatef96/devops-capstone
+            docker push mohamedatef96/devops-capstone-udacity
     
   Kubectl_Apply:
     docker:
@@ -59,21 +59,21 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            sudo ./update_kubeconfig.sh
+            ./update_kubeconfig.sh
       - run:
           name: Start Blue Service 
           command: |
             cd blue
-            sudo ./run_kubernetes.sh       
+            ./run_kubernetes.sh       
       - run:
           name: Start Green Service 
           command: |       
             cd green
-            sudo ./run_kubernetes.sh
+            ./run_kubernetes.sh
       - run:
           name: Redirect to Blue 
           command: |       
-            sudo ./run_kubernetes.sh
+            ./run_kubernetes.sh
   Apply_Green:
     docker:
     - image: amazon/aws-cli
@@ -83,11 +83,11 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            sudo ./update_kubeconfig.sh
+            ./update_kubeconfig.sh
       - run:
           name: Redirect to Green
           command: |
-            sudo ./run_kubernetes.sh
+            ./run_kubernetes.sh
 workflows:
   default:
     jobs:
