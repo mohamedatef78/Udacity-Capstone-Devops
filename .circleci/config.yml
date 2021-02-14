@@ -1,0 +1,102 @@
+version: 2.1
+     
+orbs:
+  kubernetes: circleci/kubernetes@0.11.2
+  aws-eks: circleci/aws-eks@1.0.3
+
+jobs:
+  Lint:
+    docker:
+      - image: ubuntu
+    steps:
+      - checkout
+      - run:
+          name: Update & install Dependencies
+          command: |
+            apt-get update
+            echo "|||||-----||||||"
+            apt-get install tidy -y
+            apt-get install wget -y
+            wget -O ./hadolint https://github.com/hadolint/hadolint/releases/download/v1.22.1/hadolint-Linux-x86_64
+            chmod +x hadolint
+            mv hadolint /bin/hadolint
+      - run:
+          name: Lint HTML
+          command: |
+            tidy -q -e *.html
+      - run:
+          name: Hadolint Dockerfile
+          command: |
+            hadolint -v
+            hadolint --ignore DL3006 Dockerfile
+
+  Dockerize:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Docker Login
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
+      - run: 
+          name: Build Image 
+          command: |
+            docker build -t asghostknight/capstone .
+      - run: 
+          name: Push Image to DockerHub 
+          command: |
+            docker push asghostknight/capstone
+    
+  Kubectl_Apply:
+    docker:
+    - image: amazon/aws-cli
+    steps:
+      - checkout
+      - kubernetes/install-kubectl
+      - run:
+          name: Update Kubeconfig
+          command: |
+            ./update_kubeconfig.sh
+      - run:
+          name: Start Blue Service 
+          command: |
+            kubectl apply -f ./Blue.json        
+      - run:
+          name: Start Green Service 
+          command: |       
+            kubectl apply -f ./Green.json
+      - run:
+          name: Redirect to Blue 
+          command: |       
+            kubectl apply -f ./Blue-Service.json
+
+  Apply_Green:
+    docker:
+    - image: amazon/aws-cli
+    steps:
+      - checkout
+      - kubernetes/install-kubectl
+      - run:
+          name: Update Kubeconfig
+          command: |
+            ./update_kubeconfig.sh
+      - run:
+          name: Redirect to Green
+          command: |
+            kubectl apply -f ./Green-Service.json
+
+
+workflows:
+  default:
+    jobs:
+      - Lint
+      - Dockerize:
+          requires: [Lint]
+      - Kubectl_Apply:
+          requires: [Dockerize]
+      - Approve_Green:
+          type: approval
+          requires: [Kubectl_Apply]
+      - Apply_Green:
+          requires: [Approve_Green]
+            
