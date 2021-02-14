@@ -44,11 +44,11 @@ jobs:
       - run: 
           name: Build Image 
           command: |
-            docker build -t mohamedatef96/capstone-devops .
+            docker build -t mohamedatef96/devops-capstone .
       - run: 
           name: Push Image to DockerHub 
           command: |
-            docker push mohamedatef96/capstone-devops
+            docker push mohamedatef96/devops-capstone
     
   Kubectl_Apply:
     docker:
