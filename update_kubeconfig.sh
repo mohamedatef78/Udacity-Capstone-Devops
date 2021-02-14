@@ -1,1 +1,1 @@
-aws eks --region us-west-2 update-kubeconfig --name UdacityCapstoneProject
+aws eks --region us-west-2 update-kubeconfig --name UdacityCapstoneDevOps
