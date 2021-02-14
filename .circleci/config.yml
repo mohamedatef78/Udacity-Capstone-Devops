@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            ./update_kubeconfig.sh
+            aws eks --region us-west-2 update-kubeconfig --name UdacityCapstoneProject
       - run:
           name: Start Blue Service 
           command: |
