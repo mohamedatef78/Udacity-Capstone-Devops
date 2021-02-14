@@ -63,17 +63,15 @@ jobs:
       - run:
           name: Start Blue Service 
           command: |
-            cd blue
-            ./run_kubernetes.sh       
+            kubectl apply -f ./blue/blue-controller.json       
       - run:
           name: Start Green Service 
           command: |       
-            cd green
-            ./run_kubernetes.sh
+            kubectl apply -f ./green/green-controller.json       
       - run:
           name: Redirect to Blue 
           command: |       
-            ./run_kubernetes.sh
+            kubectl apply -f ./blue-green-service.json
   Apply_Green:
     docker:
     - image: amazon/aws-cli
@@ -83,11 +81,11 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            ./update_kubeconfig.sh
+            aws eks --region us-west-2 update-kubeconfig --name UdacityCapstoneProject
       - run:
           name: Redirect to Green
           command: |
-            ./run_kubernetes.sh
+            kubectl apply -f ./blue-green-service.json
 workflows:
   default:
     jobs:
