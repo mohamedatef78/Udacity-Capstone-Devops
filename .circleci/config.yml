@@ -35,17 +35,21 @@ jobs:
     steps:
       - checkout
       - run:
+          name: docker logout
+          command: |
+            docker logout
+      - run:
           name: Docker Login
           command: |
             echo "$DOCKER_PASSWORD" | docker login --username $DOCKER_USERNAME --password-stdin
       - run: 
           name: Build Image 
           command: |
-            docker build -t asghostknight/capstone .
+            docker build -t mohamedatef96/capstone .
       - run: 
           name: Push Image to DockerHub 
           command: |
-            docker push asghostknight/capstone
+            docker push mohamedatef96/capstone
     
   Kubectl_Apply:
     docker:
