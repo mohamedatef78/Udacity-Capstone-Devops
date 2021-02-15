@@ -59,7 +59,7 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            aws eks --region us-west-2 update-kubeconfig --name UdacityCapstone
+            aws eks --region us-west-2 update-kubeconfig --name Capstoneproject
       - run:
           name: Start Blue Service 
           command: |
@@ -81,7 +81,7 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            aws eks --region us-west-2 update-kubeconfig --name UdacityCapstone
+            aws eks --region us-west-2 update-kubeconfig --name Capstoneproject
       - run:
           name: Redirect to Green
           command: |
