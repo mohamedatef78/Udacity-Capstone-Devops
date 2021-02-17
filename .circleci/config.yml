@@ -1,11 +1,10 @@
 version: 2.1
-     
 orbs:
   kubernetes: circleci/kubernetes@0.11.2
-  aws-eks: circleci/aws-eks@1.0.3
+  awseks: circleci/aws-eks@1.0.3
 
 jobs:
-  Lint:
+  Make_Lint:
     docker:
       - image: ubuntu
     steps:
@@ -50,7 +49,7 @@ jobs:
           command: |
             docker push mohamedatef96/devops-capstone-udacity
     
-  Kubectl_Apply:
+  Apply_Kubectl_Service:
     docker:
     - image: amazon/aws-cli
     steps:
@@ -59,21 +58,21 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            aws eks --region us-west-2 update-kubeconfig --name Udacity-Capstone-master
+            aws eks --region us-west-2 update-kubeconfig --name Udacity-Capstone-master-DevOps
 
       - run:
           name: Start Blue Service 
           command: |
-            kubectl apply -f ./Blue.json        
+            kubectl apply -f ./blue-controller.json        
       - run:
           name: Start Green Service 
           command: |       
-            kubectl apply -f ./Green.json
+            kubectl apply -f ./green-controller.json
       - run:
           name: Redirect to Blue 
           command: |       
             kubectl apply -f ./Blue-Service.json
-  Apply_Green:
+  Apply_Green_service:
     docker:
     - image: amazon/aws-cli
     steps:
@@ -82,7 +81,7 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            aws eks --region us-west-2 update-kubeconfig --name Udacity-Capstone-master
+            aws eks --region us-west-2 update-kubeconfig --name Udacity-Capstone-master-DevOps
       - run:
           name: Redirect to Green
           command: |
@@ -90,13 +89,13 @@ jobs:
 workflows:
   default:
     jobs:
-      - Lint
+      - Make_Lint
       - Dockerize:
-          requires: [Lint]
-      - Kubectl_Apply:
+          requires: [Make_Lint]
+      - Apply_Kubectl_Service:
           requires: [Dockerize]
       - Approve_Green:
           type: approval
-          requires: [Kubectl_Apply]
-      - Apply_Green:
+          requires: [Apply_Kubectl_Service]
+      - Apply_Green_service:
           requires: [Approve_Green]
