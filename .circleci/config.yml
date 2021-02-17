@@ -27,7 +27,7 @@ jobs:
           name: Hadolint Dockerfile
           command: |
             hadolint -v
-            hadolint --ignore DL3006 Docckerfile
+            hadolint --ignore DL3006 Dokerfile
   Dockerize:
     machine: true
     steps:
