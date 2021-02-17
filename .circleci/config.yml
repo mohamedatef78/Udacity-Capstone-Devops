@@ -59,19 +59,20 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            aws eks --region us-west-2 update-kubeconfig --name Capstoneproject
+            aws eks --region us-west-2 update-kubeconfig --name Udacity-Capstone-master
+
       - run:
           name: Start Blue Service 
           command: |
-            kubectl apply -f ./blue/blue-controller.json       
+            kubectl apply -f ./Blue.json        
       - run:
           name: Start Green Service 
           command: |       
-            kubectl apply -f ./green/green-controller.json       
+            kubectl apply -f ./Green.json
       - run:
           name: Redirect to Blue 
           command: |       
-            kubectl apply -f ./green-blue-service.json
+            kubectl apply -f ./Blue-Service.json
   Apply_Green:
     docker:
     - image: amazon/aws-cli
@@ -81,11 +82,11 @@ jobs:
       - run:
           name: Update Kubeconfig
           command: |
-            aws eks --region us-west-2 update-kubeconfig --name Capstoneproject
+            aws eks --region us-west-2 update-kubeconfig --name Udacity-Capstone-master
       - run:
           name: Redirect to Green
           command: |
-            kubectl apply -f ./blue-green-service.json
+            kubectl apply -f ./Green-Service.json
 workflows:
   default:
     jobs:

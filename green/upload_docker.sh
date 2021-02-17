@@ -6,13 +6,13 @@
 # Step 1:
 # Create dockerpath
 # dockerpath=<your docker ID/path>
-dockerpath=green
+dockerpath=devops-capstone-udacity
 
 # Step 2:  
 # Authenticate & tag
 echo "Docker ID and Image: $dockerpath"
 docker login --username mohamedatef96
-docker tag green mohamedatef96/green
+docker tag green mohamedatef96/devops-capstone-udacity
 # Step 3:
 # Push image to a docker repository
-docker push mohamedatef96/green
+docker push mohamedatef96/devops-capstone-udacity

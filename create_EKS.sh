@@ -1,6 +1,6 @@
   
 eksctl create cluster \
---name UdacityCapstone \
+--name Udacity-Capstone-master \
 --version 1.18 \
 --region us-west-2 \
 --nodegroup-name udacity-workers \
